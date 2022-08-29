@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksi_mm_mulator_website=self.webpackChunksi_mm_mulator_website||[]).push([[367],{3186:e=>{e.exports=JSON.parse('{"permalink":"/siMMMulator/blog/tags/hello","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

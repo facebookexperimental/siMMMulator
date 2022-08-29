@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunksi_mm_mulator_website=self.webpackChunksi_mm_mulator_website||[]).push([[713],{3457:e=>{e.exports=JSON.parse('[{"label":"docusaurus","permalink":"/blog/tags/docusaurus","count":2},{"label":"hello","permalink":"/blog/tags/hello","count":1}]')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksi_mm_mulator_website=self.webpackChunksi_mm_mulator_website||[]).push([[704],{348:s=>{s.exports=JSON.parse('[{"label":"docusaurus","permalink":"/siMMMulator/blog/tags/docusaurus","count":2},{"label":"hello","permalink":"/siMMMulator/blog/tags/hello","count":1}]')}}]);
