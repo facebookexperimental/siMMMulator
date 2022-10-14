@@ -16,7 +16,7 @@ const config = {
   title: 'siMMMulator',
   tagline: 'An Open Source Method to Generate Data for Marketing Mix Models',
   url: 'https://facebookexperimental.github.io',
-  baseUrl: '/',
+  baseUrl: '/siMMMulator/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',

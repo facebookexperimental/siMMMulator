@@ -9,11 +9,10 @@ siMMMulator is an R-code package. Make sure you have the latest version of R ins
 Use `remotes` package. 
 
 ```
+# If you don't have remotes installed yet, first run this line: 
+install.packages("remotes") 
 
-install.packages("remotes") # Run this line if you do not have remotes installed yet
-
-library(remotes)
-
+# install siMMMulator 
 remotes::install_github(
     repo = "facebookexperimental/siMMMulator"
 )
