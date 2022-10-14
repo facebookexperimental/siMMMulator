@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>siMMMulator Blog</title>
-        <link>https://facebookexperimental.github.io/siMMMulator/blog</link>
+        <link>https://facebookexperimental.github.io/blog</link>
         <description>siMMMulator Blog</description>
         <lastBuildDate>Sun, 01 Aug 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
@@ -10,7 +10,7 @@
         <language>en</language>
         <item>
             <title><![CDATA[MDX Blog Post]]></title>
-            <link>https://facebookexperimental.github.io/siMMMulator/blog/mdx-blog-post</link>
+            <link>https://facebookexperimental.github.io/blog/mdx-blog-post</link>
             <guid>mdx-blog-post</guid>
             <pubDate>Sun, 01 Aug 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[Blog posts support Docusaurus Markdown features, such as MDX.]]></description>
@@ -19,7 +19,7 @@
         </item>
         <item>
             <title><![CDATA[Long Blog Post]]></title>
-            <link>https://facebookexperimental.github.io/siMMMulator/blog/long-blog-post</link>
+            <link>https://facebookexperimental.github.io/blog/long-blog-post</link>
             <guid>long-blog-post</guid>
             <pubDate>Wed, 29 May 2019 00:00:00 GMT</pubDate>
             <description><![CDATA[This is the summary of a very long blog post,]]></description>
