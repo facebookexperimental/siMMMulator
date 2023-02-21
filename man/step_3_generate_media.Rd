@@ -18,9 +18,9 @@ step_3_generate_media(
 
 \item{df_ads_step2}{A data frame that was created after running step 2.}
 
-\item{true_cpm}{A vector of numbers specifying the true Cost per Impression (CPM) of each channel (noise will be added to this to simulate number of impressions), length MUST equal to the number of TOTAL channels, if channels do not use impressions to measure activity, then do not call this argument in the function, must be in same order as channels specified}
+\item{true_cpm}{A vector of numbers specifying the true Cost per Impression (CPM) of each channel (noise will be added to this to simulate number of impressions), length MUST equal to the number of TOTAL channels, if channels do not use impressions to measure activity, then put in NA for the channel, must be in same order as channels specified}
 
-\item{true_cpc}{A vector of numbers specifying the true Cost per Click (CPC) of each channel (noise will be added to this to simulate number of clicks), length MUST equal to the number of TOTAL channels, if channels do not use clicks to measure activity, then do not call this argument in the function, must be in same order as channels specified}
+\item{true_cpc}{A vector of numbers specifying the true Cost per Click (CPC) of each channel (noise will be added to this to simulate number of clicks), length MUST equal to the number of TOTAL channels, if channels do not use clicks to measure activity, then put in NA for the channel, must be in same order as channels specified}
 
 \item{mean_noisy_cpm_cpc}{A vector of numbers with mean of normal distribution that generates noise to CPM or CPC, vector with length equal to number of channels, must be in same order as channels specified (put channels that use impressions first, followed by channels that use clicks)}
 
@@ -36,12 +36,13 @@ This step generates media activity using spend from Step 2.
 \dontrun{
 
 step_3_generate_media(
+df_ads_step3 <- step_3_generate_media(
 my_variables = my_variables,
 df_ads_step2 = df_ads_step2,
-true_cpm = c(2, 20, 10, NA),
-true_cpc = c(NA, NA, NA, 1),
-mean_noisy_cpm_cpc = c(0, 0.05, 0.1, 0.02),
-std_noisy_cpm_cpc = c(0.1, 0.15, 0.2, 0.03)
+true_cpm = c(2, 20, NA),
+true_cpc = c(NA, NA, 0.25),
+mean_noisy_cpm_cpc = c(1, 0.05, 0.01),
+std_noisy_cpm_cpc = c(0.01, 0.15, 0.01)
 )
 }
 }

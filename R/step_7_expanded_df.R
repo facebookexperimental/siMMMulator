@@ -40,8 +40,9 @@ step_7_expanded_df <- function(
   frequency_of_campaigns <- my_variables[[4]]
   true_cvr <- my_variables[[5]]
   revenue_per_conversion <- my_variables[[6]]
+  start_date <- my_variables[[7]]
 
-  n_weeks <- years*52
+  n_days <- years*365
   channels <- c(channels_impressions, channels_clicks)
   n_channels = length(channels)
 
@@ -50,11 +51,12 @@ step_7_expanded_df <- function(
   revenue_from_ads <- NA
   baseline_revenue <- NA
 
+  ## daily data
   # start final data frame
   df_mmm <- data.frame(
-    DATE = seq(from = as.Date("2017/1/1"),
-               to = as.Date("2017/1/1") + (n_weeks*7) - (n_weeks/52),
-               by = "1 week")
+    DATE = seq(from = as.Date(start_date),
+               to = as.Date(start_date) + n_days - 1,
+               by = "1 day")
   )
 
   # input in media variables into final data frame
@@ -64,7 +66,7 @@ step_7_expanded_df <- function(
 
   } else {
     for(j in 1:length(channels_impressions)) {
-      column_to_grab <- paste0("sum_n_", quo_name(channels_impressions[j]), "_imps_this_week")
+      column_to_grab <- paste0("sum_n_", quo_name(channels_impressions[j]), "_imps_this_day")
       column_name_in_df_mmm <- paste0("impressions_", quo_name(channels_impressions[j]))
       df_mmm[,column_name_in_df_mmm] <-  df_ads_step6[, column_to_grab]
     }
@@ -76,7 +78,7 @@ step_7_expanded_df <- function(
 
   } else {
     for(j in 1:length(channels_clicks)) {
-      column_to_grab <- paste0("sum_n_", quo_name(channels_clicks[j]), "_clicks_this_week")
+      column_to_grab <- paste0("sum_n_", quo_name(channels_clicks[j]), "_clicks_this_day")
       column_name_in_df_mmm <- paste0("clicks_", quo_name(channels_clicks[j]))
       df_mmm[,column_name_in_df_mmm] <-  df_ads_step6[, column_to_grab]
     }
@@ -84,7 +86,7 @@ step_7_expanded_df <- function(
 
   # input in spend variables into final data frame
   for(j in 1:length(channels)) {
-    column_to_grab <- paste0("sum_spend_", quo_name(channels[j]), "_this_week")
+    column_to_grab <- paste0("sum_spend_", quo_name(channels[j]), "_this_day")
     column_name_in_df_mmm <- paste0("spend_", quo_name(channels[j]))
     df_mmm[,column_name_in_df_mmm] <-  df_ads_step6[, column_to_grab]
   }
@@ -107,9 +109,14 @@ step_7_expanded_df <- function(
   ## add baseline sales to sales from ads
   df_mmm <- df_mmm %>% mutate(total_revenue = revenue_from_ads + baseline_revenue)
 
+
+
+
+
+
   # output
 
-  print("You have completed running step 7: Expanding to maximum data frame")
+  print("You have completed running step 7: Expanding to maximum data frame.")
 
   return(df_mmm)
 

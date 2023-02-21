@@ -9,12 +9,13 @@
 #'
 #' User inputs basic parameters that will be used in subsequent steps to simulate the data set, exists so that user does not have to keep inputting them. The parameters here initialize some variables in the user's environment.
 #'
-#' @param years A number, number of years you want to generate weekly data for. Must be a whole number and equal to or greater than 1.
+#' @param years A number, number of years you want to generate data for. Must be a whole number and equal to or greater than 1.
 #' @param channels_impressions A vector of character strings, names of media channels that use impressions as their metric of activity (Examples: Facebook, TV, Long-Form Video), must be in vector format with strings. Do not provide if not applicable to you.
 #' @param channels_clicks A vector of character strings, names of media channels that use clicks as their metric of activity (Examples: Search), must be in vector format with strings. Do not provide if not applicable to you.
-#' @param frequency_of_campaigns A number, how often campaigns occur (for example, frequency of 2 would yield a new campaign every 2 weeks with each campaign lasting 2 weeks). Must be a whole number greater than or equal to 1.
+#' @param frequency_of_campaigns A number, how often campaigns occur (for example, frequency of 1 would yield a new campaign every 1 day with each campaign lasting 1 day). Must be a whole number greater than or equal to 1.
 #' @param true_cvr A vector of numbers, what the underlying conversion rates of all the channels are, statistical noise will be added on top of this, should be a vector of numbers between 0 and 1 in the SAME order as how channels were specified (channels that use impressions first, followed by channels that use clicks), must have same length as number of channels
 #' @param revenue_per_conv A number, How much money we make from a conversion (i.e. profit from a unit of sale). Must be a number greater than 0.
+#' @param start_date A string in the format yyyy/mm/dd that determines when your daily data set starts on.
 #'
 #' @return A list (in users' global environment) of variables the user has input
 #' @export
@@ -23,9 +24,10 @@
 #' step_0_define_basic_parameters(years = 5,
 #' channels_impressions = c("Facebook", "TV", "Long-Form Video"),
 #' channels_clicks = c("Search"),
-#' frequency_of_campaigns = 2,
+#' frequency_of_campaigns = 1,
 #' true_cvr = c(0.001, 0.002, 0.01, 0.005),
-#' revenue_per_conv = 1)
+#' revenue_per_conv = 1,
+#' start_date = "2017/1/1")
 
 
 step_0_define_basic_parameters <- function(years = 5,
@@ -33,7 +35,8 @@ step_0_define_basic_parameters <- function(years = 5,
                                            channels_clicks = c(),
                                            frequency_of_campaigns = 1,
                                            true_cvr,
-                                           revenue_per_conv){
+                                           revenue_per_conv,
+                                           start_date = "2017/1/1"){
 
 
   years_var <- years
@@ -42,6 +45,7 @@ step_0_define_basic_parameters <- function(years = 5,
   frequency_of_campaigns_var <- frequency_of_campaigns
   true_cvr_var <- true_cvr
   revenue_per_conv_var <- revenue_per_conv
+  start_date <- as.Date(start_date)
 
   # Display error messages for invalid inputs
   if (typeof(years_var) != "double") stop("You did not enter a number for years. You must have years be a numeric type.") # error if incorrect variable type for years
@@ -56,6 +60,7 @@ step_0_define_basic_parameters <- function(years = 5,
   if ((frequency_of_campaigns %% 1 == 0) == FALSE) stop("You entered a decimal for the frequency of campaigns. You must enter a whole number") # error if frequency of campaign is not an integer
   if (frequency_of_campaigns < 1) stop ("You entered a frequency of campaign less than 1. You must enter a number greater than 1") # error if frequency of campaign is < 1
   if (revenue_per_conv <= 0) stop("You entered a negative or zero revenue per conversion. You must enter a positive number") # error if revenue_per_conv is <= 0
+  if (typeof(start_date) != "double") stop("You've didn't enter a correct format for the date. Enter as a string yyyy/mm/dd")
 
   # return variables as outputs to use with other functions
   list_of_vars <- list(years_var,
@@ -63,7 +68,8 @@ step_0_define_basic_parameters <- function(years = 5,
                        channels_clicks_var,
                        frequency_of_campaigns_var,
                        true_cvr_var,
-                       revenue_per_conv_var)
+                       revenue_per_conv_var,
+                       start_date)
 
 
   # print them out so people can see
@@ -77,6 +83,7 @@ step_0_define_basic_parameters <- function(years = 5,
   print(paste("How frequently campaigns occur : ", list_of_vars[[4]]))
   print(paste("True CVRs of a channel (in order of channels you specified) : ", sapply(list_of_vars[[5]], paste, collapse = "")))
   print(paste("Revenue per conversion : ", list_of_vars[[6]]))
+  print(paste("Date the data set will start with : ", list_of_vars[[7]]))
 
   return(list_of_vars)
 

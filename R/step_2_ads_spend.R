@@ -12,7 +12,7 @@
 #' @param my_variables A list that was created after running step 0. It stores the inputs you've specified.
 #' @param campaign_spend_mean A numeric, the average amount of money spent on a campaign, must be in same currency as baseline sales generated in step 1
 #' @param campaign_spend_std A numeric, the standard deviation of money spent on a campaign, must be in same currency as baseline sales generated in step 1
-#' @param max_min_proportion_on_each_channel A vector of numerics specifying the minimum and maximum percentages of total spend allocated to each channel, should be in the same order as channels specified (channels that use impressions first followed by channels that use clicks), length should be 2 times (number of total channels - 1)
+#' @param max_min_proportion_on_each_channel A vector of numerics specifying the minimum and maximum percentages of total spend allocated to each channel, should be in the same order as channels specified (channels that use impressions first followed by channels that use clicks), length should be 2 times (number of total channels - 1), you should have a pair of numbers for each channel except the last channel
 #'
 #' @return A data frame with amounts of money spent on each campaign and media channel
 #'
@@ -24,14 +24,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' step_2_ads_spend(
-#' my_variables = my_variables,
+#' df_ads_step2 <- step_2_ads_spend(my_variables = my_variables,
 #' campaign_spend_mean = 329000,
 #' campaign_spend_std = 100000,
-#' max_min_proportion_on_each_channel <- c(0.45, 0.55,
-#' 0.15, 0.25,
-#' 0.1, 0.2)
-#' )
+#' max_min_proportion_on_each_channel <- c(0.45, 0.55, 0.1, 0.15))
 #' }
 
 step_2_ads_spend <- function(my_variables = my_variables,
@@ -50,15 +46,16 @@ step_2_ads_spend <- function(my_variables = my_variables,
   channels <- c(channels_impressions, channels_clicks)
   channels <- channels[!is.na(channels)] # only keep the non-NA channels
   n_channels <- length(channels)
-  n_weeks <- years*52
-  n_campaigns <- n_weeks/frequency_of_campaigns
+  n_days <- years*365
+  n_campaigns <- n_days/frequency_of_campaigns
 
   # Display error messages for invalid inputs
   if (typeof(campaign_spend_mean) != "double") stop("You did not enter a number for campaign_spend_mean. Must enter a numeric." ) # error if incorrect variable type for campaign_spend_mean
   if (typeof(campaign_spend_std) != "double") stop("You did not enter a number for campaign_spend_std. Must enter a numeric." ) # error if incorrect variable type for campaign_spend_std
   if (typeof(max_min_proportion_on_each_channel) != "double") stop("You did not enter a number in max_min_proportion_on_each_channel. Must enter a numeric." ) # error if incorrect variable type for max_min_proportion_on_each_channel
   if (campaign_spend_mean < 0) stop('You entered a negative average campaign spend. Enter a positive number.') # error if negative average campaign spend
-  if (length(max_min_proportion_on_each_channel)!= ((sum(!is.na(channels_impressions)) + sum(!is.na(channels_clicks)))*2 - 2) | (any(is.na(max_min_proportion_on_each_channel)) == TRUE)) stop("Did not input in enough numbers or put in too many numbers for proportion of spends on each channel. Must have a maximum and minimum percentage specified for all channels except the last channel, which will be auto calculated as any remaining amount.") # error if not enough conversion rates are supplied
+  if (campaign_spend_std > campaign_spend_mean) warning("You've entered a campaign spend standard deviation larger than the mean. As a result, you may get negative campaign spends. We've turned these into 0's for you.")
+  if (length(max_min_proportion_on_each_channel)!= (2*(sum(!is.na(channels_impressions)) + sum(!is.na(channels_clicks)))- 2) | (any(is.na(max_min_proportion_on_each_channel)) == TRUE)) stop("Did not input in enough numbers or put in too many numbers for proportion of spends on each channel. Must have a maximum and minimum percentage specified for all channels except the last channel, which will be auto calculated as any remaining amount.") # error if not enough conversion rates are supplied
   if (ifelse(all(max_min_proportion_on_each_channel > 0), TRUE, FALSE) == FALSE) stop("You entered a negative proportion of spend on a channel. Enter a proportion between 0 and 1") # error if any proportion of spend on a channel entered are less than 0
   if (ifelse(all(max_min_proportion_on_each_channel <= 1), TRUE, FALSE) == FALSE) stop("You entered a proportion of spend on a channel greater than 1. Enter a proportion rate between 0 and 1.") # error if any proportion of spend on a channel are greater than 1
 
@@ -79,7 +76,7 @@ step_2_ads_spend <- function(my_variables = my_variables,
   # specify the amount spend on each channel for each campaign
   ## proportions spent on each channel are randomly generated proportions drawn from a uniform distribution of numbers between inputs user identifies
   proportion_strings_list <- vector(mode = "list", length = n_campaigns)
-  for(i in 1:n_campaigns) { # replace 1 with n_campaigns
+  for(i in 1:n_campaigns) {
     total_proportion_campaign <- 0
     for (j in 1:(n_channels-1)) {
       proportion_strings_list[[i]][j] <- runif(1, min = max_min_proportion_on_each_channel[(2*j)-1], max = max_min_proportion_on_each_channel[2*j])

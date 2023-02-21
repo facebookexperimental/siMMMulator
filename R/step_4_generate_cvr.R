@@ -51,7 +51,7 @@ step_4_generate_cvr <- function(
 
   channels <- c(channels_impressions, channels_clicks)
   n_channels = length(channels)
-  n_weeks <- years*52
+  n_days <- years*365
 
   # Error messages for invalid user inputs
   if (typeof(mean_noisy_cvr) != "double") stop("You did not enter a number in mean_noisy_cvr. Must enter a numeric." ) # error if incorrect variable type for mean_noisy_cvr
@@ -66,12 +66,12 @@ step_4_generate_cvr <- function(
   # add our work to the data frame from first step
   df_ads_step4_intermediate <- cbind(df_ads_step3, true_cvr, noisy_cvr)
 
-  # cvr remains same each week of campaign
+  # cvr remains same each day of campaign
   for (p in 1:nrow(df_ads_step4_intermediate)){
     for (j in 1:length(channels)) {
       for (n in 1:frequency_of_campaigns) {
         df_ads_step4_intermediate <- df_ads_step4_intermediate %>% mutate(
-          !!paste0("noisy_cvr_", quo_name(channels[j]), "_after_running_week_", {n}) := case_when(
+          !!paste0("noisy_cvr_", quo_name(channels[j]), "_after_running_day_", {n}) := case_when(
             channel == channels[j] ~ noisy_cvr # uniform distribution
           )
         )

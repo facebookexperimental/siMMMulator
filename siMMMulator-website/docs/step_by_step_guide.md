@@ -13,14 +13,14 @@ First, provide some basic inputs that will be used to generate data. This step e
 Replace the parameter values with ones that you want.
 
 ```
-my_variables <- step_0_define_basic_parameters(
-                                    years = 5,
-                                    channels_impressions = c("Facebook", "TV"),
-                                    channels_clicks = c(),
-                                    frequency_of_campaigns = 1,
-                                    true_cvr = c(0.001, 0.002),
-                                    revenue_per_conv = 1
-                                    )
+my_variables <- step_0_define_basic_parameters(years = 2,
+                                               channels_impressions = c("Facebook", "TV"),
+                                               channels_clicks = c("Search"),
+                                               frequency_of_campaigns = 1,
+                                               true_cvr = c(0.001, 0.002, 0.003),
+                                               revenue_per_conv = 1, 
+                                               start_date = "2017/1/1"
+)
 ```
 This code is for illustration purposes only. Individual results may vary.
 
@@ -29,11 +29,12 @@ This code is for illustration purposes only. Individual results may vary.
 | Parameter              | Description                                                                                                                                                                                                                                                                                                                                                | Default value if none provided |
 |------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
 | years                  | A number, number of years you want to generate weekly data for. Must be a whole number and equal to or greater than 1.                                                                                                                                                                                                                                     | 5                              |
-| channels_impressions   | A vector of character strings, names of media channels that use impressions as their metric of activity (Examples: Facebook, TV, Long-Form Video), must be in vector format with strings. Do not provide if not applicable to you.                                                                                                                         | c()                          |
-| channels_clicks        | A vector of character strings, names of media channels that use clicks as their metric of activity (Examples: Search), must be in vector format with strings. Do not provide if not applicable to you.                                                                                                                                                     | c()                          |
+| channels_impressions   | A vector of character strings, names of media channels that use impressions as their metric of activity (Examples: Facebook, TV, Long-Form Video), must be in vector format with strings. Do not provide if not applicable to you.                                                                                                                         | No default provided.                          |
+| channels_clicks        | A vector of character strings, names of media channels that use clicks as their metric of activity (Examples: Search), must be in vector format with strings. Do not provide if not applicable to you.                                                                                                                                                     | No default provided.                          |
 | frequency_of_campaigns | A number, how often campaigns occur (for example, frequency of 2 would yield a new campaign every 2 weeks with each campaign lasting 2 weeks). Must be a whole number greater than or equal to 1.                                                                                                                                                          | 1                              |
 | true_cvr               | A vector of numbers, what the underlying conversion rates of all the channels are, statistical noise will be added on top of this, should be a vector of numbers between 0 and 1 in the SAME order as how channels were specified (channels that use impressions first, followed by channels that use clicks), must have same length as number of channels | No default provided.           |
 | revenue_per_conv       | A number, How much money we make from a conversion (i.e. profit from a unit of sale). Must be a number greater than 0.                                                                                                                                                                                                                                     | No default provided.           |
+start_date       | A string in the format yyyy/mm/dd that determines when your daily data set starts on.                                                                                                                                                                                                                                      | 2017/1/1
 
 **Tips on Picking Parameters:**
 - *How many years to generate data for?* To get robust results on most MMMs, you should have a minimum of 2 years. However, since data availability is not an issue here, we recommend having 4 to 5 years of data for the model to have more data points to train on. See [Analysts Guide to MMM](https://facebookexperimental.github.io/Robyn/docs/analysts-guide-to-MMM/) for more info.
@@ -191,12 +192,14 @@ Essentially, we're going to take "true" CPMs and CPCs that you enter and then in
 df_ads_step3 <- step_3_generate_media(
   my_variables = my_variables,
   df_ads_step2 = df_ads_step2,
-  true_cpm = c(2, 20),
-  true_cpc = c(),
-  mean_noisy_cpm_cpc = c(1, 0.05),
-  std_noisy_cpm_cpc = c(0.01, 0.15)
+  true_cpm = c(2, 20, NA),
+  true_cpc = c(NA, NA, 0.25),
+  mean_noisy_cpm_cpc = c(1, 0.05, 0.01),
+  std_noisy_cpm_cpc = c(0.01, 0.15, 0.01)
 )
 ```
+**Note:** Add in 'NA' for the channels that do not use CPM or CPC. In this example, there are 3 channels: Facebook; TV; Search. Facebook and TV use impressions and so I've specified their true CPMs. Search does not use impressions so I left the third CPM as NA. I did the same analog for CPC (which is only applicable for Search).
+
 This code is for illustration purposes only. Individual results may vary.
 
 **Parameters Required in Function:**
@@ -206,8 +209,8 @@ This code is for illustration purposes only. Individual results may vary.
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
 | my_variables       | A list that was created after running step 0. It stores the inputs you've specified.                                                                                                                                                                                                                                                                      | my_variables                   |
 | df_ads_step2       | A data frame that was created after running step 2.                                                                                                                                                                                                                                                                                                       | df_ads_step2                   |
-| true_cpm           | A vector of numbers specifying the true Cost per Impression (CPM) of each channel (noise will be added to this to simulate number of impressions), length MUST equal to the number of TOTAL channels, if channels do not use impressions to measure activity, then do not call this argument in the function, must be in same order as channels specified | c()                          |
-| true_cpc           | A vector of numbers specifying the true Cost per Click (CPC) of each channel (noise will be added to this to simulate number of clicks), length MUST equal to the number of TOTAL channels, if channels do not use clicks to measure activity, then do not call this argument in the function, must be in same order as channels specified                | c()                          |
+| true_cpm           | A vector of numbers specifying the true Cost per Impression (CPM) of each channel (noise will be added to this to simulate number of impressions), length MUST equal to the number of TOTAL channels, if channels do not use impressions to measure activity, then put in NA for the channel, must be in same order as channels specified | No default provided.                         |
+| true_cpc           | A vector of numbers specifying the true Cost per Click (CPC) of each channel (noise will be added to this to simulate number of clicks), length MUST equal to the number of TOTAL channels, if channels do not use clicks to measure activity, then put in NA for the channel, must be in same order as channels specified                | No default provided.                          |
 | mean_noisy_cpm_cpc | A vector of numbers with mean of normal distribution that generates noise to CPM or CPC, vector with length equal to number of channels, must be in same order as channels specified (put channels that use impressions first, followed by channels that use clicks)                                                                                      | No default provided.           |
 | std_noisy_cpm_cpc  | A vector of numbers with standard deviation of normal distribution that generates noise to CPM or CPC, vector with length equal to number of channels, must be in same order as channels specified (put channels that use impressions first, followed by channels that use clicks)                                                                        | No default provided.           |
 
@@ -225,8 +228,8 @@ Now we generate noise around CVRs that we input for each channel. You've already
 df_ads_step4 <- step_4_generate_cvr(
   my_variables = my_variables,
   df_ads_step3 = df_ads_step3,
-  mean_noisy_cvr = c(0, 0.0001),
-  std_noisy_cvr = c(0.001, 0.002)
+  mean_noisy_cvr = c(0, 0.0001, 0.0002), 
+  std_noisy_cvr = c(0.001, 0.002, 0.003)
   )
 ```
 This code is for illustration purposes only. Individual results may vary.
@@ -237,7 +240,7 @@ This code is for illustration purposes only. Individual results may vary.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
 | my_variables   | A list that was created after running step 0. It stores the inputs you've specified.                                                                                                                                                                                                                                                                      | my_variables                   |
 | df_ads_step3   | A data frame that was created after running step 3.                                                                                                                                                                                                                                                                                                       | df_ads_step3                   |
-| mean_noisy_cvr | A vector of numbers specifying the mean of the normal distribution used to add noise to conversion rates (CVR) of each channel, vector must be in the same order as channels specified (first channels that use impressions as a metric of activity, then channels that use clicks), must have length equal to number of total channels           |
+| mean_noisy_cvr | A vector of numbers specifying the mean of the normal distribution used to add noise to conversion rates (CVR) of each channel, vector must be in the same order as channels specified (first channels that use impressions as a metric of activity, then channels that use clicks), must have length equal to number of total channels           | No default provided.
 | std_noisy_cvr  | A vector of numbers specifying the standard deviation of the normal distribution used to add noise to conversion rates (CVR) of each channel, vector must be in the same order as channels specified (first channels that use impressions as a metric of activity, then channels that use clicks), must have length equal to number of total channels                   | No default provided.           |
 
 ## Step 5 : Transforming Media Variables
@@ -280,7 +283,7 @@ For more information on adstock, see Robyn's page on [Features, under the sectio
 df_ads_step5b <- step_5b_decay(
   my_variables = my_variables,
   df_ads_step5a_before_mmm = df_ads_step5a_before_mmm,
-  true_lambda_decay = c(0.1, 0.2)
+  true_lambda_decay = c(0.1, 0.2, 0.3)
 )
 ```
 This code is for illustration purposes only. Individual results may vary.
@@ -306,11 +309,11 @@ For more information on adstock, see Robyn's page on [Features, under the sectio
 
 ```
 df_ads_step5c <- step_5c_diminishing_returns(
-                        my_variables = my_variables,
-                        df_ads_step5b = df_ads_step5b,
-                        alpha_saturation = c(4, 3, 2, 1),
-                        gamma_saturation = c(0.2, 0.3, 0.4, 0.5)
-                        )
+  my_variables = my_variables,
+  df_ads_step5b = df_ads_step5b,
+  alpha_saturation = c(2, 2, 2),
+  gamma_saturation = c(0.1, 0.2, 0.3)
+)
 ```
 This code is for illustration purposes only. Individual results may vary.
 
@@ -335,6 +338,8 @@ The various lines represent:
 | gamma_saturation | A vector of numbers between 0 and 1 specifying a gamma parameter of geometric distribution for applying diminishing returns to media variables. MUST have elements between 0 and 1!!!! Should be in the same order as how the media channels were specified (first with the channels that use impressions as a metric of activity and then channels that use clicks), must have the same length as number the of total channels. | df_ads_step5b                  |
 | x_marginal       | Numeric. When provided, the function returns the Hill-transformed value of the x_marginal input. Default is to leave NULL                                                                                                                                                                                                                                                                                              | NULL                           |
 
+
+**NOTE:** If you leave the parameter `x_marginal` as NULL (the default), you may get some warning messages. These warning messages are not harmful. 
 
 ## Step 6 : Calculating Conversions
 
@@ -408,17 +413,28 @@ This code is for illustration purposes only. Individual results may vary.
 
 ## Step 9 : Get Final Data Frame
 
-Now we create the final data frame. We will keep only the necessary variables for final data frame and format. This function will output the final data frame.
+Now we create the final data framse. We will keep only the necessary variables for final data frames and format. This function will output a list with two data frames. The first data frame is at the daily level; the second data frame is at a weekly level. They are built on the same assumptions. The weekly data frame is just the daily frame aggregated up. 
 
 **Example:**
 
 ```
-df_final <- step_9_final_df(
+list_of_df_final <- step_9_final_df(
   my_variables = my_variables,
   df_ads_step7 = df_ads_step7
 )
 
 ```
+
+To extract the daily data frame: 
+```
+daily_df <- list_of_df_final[[1]]
+```
+
+To extract the weekly data frame: 
+```
+weekly_df <- list_of_df_final[[2]]
+```
+
 This code is for illustration purposes only. Individual results may vary.
 
 Here are a few example graphs of the data sets that you could get depending on your inputs.
@@ -446,6 +462,11 @@ Plots final data. You may get plots like those shown in the examples for Step 9.
 **Example:**
 
 ```
-optional_step_9.5_plot_final_df(df_final = df_final)
+optional_step_9.5_plot_final_df(df_final = list_of_df_final[[1]]) # for daily data
 ```
+
+```
+optional_step_9.5_plot_final_df(df_final = list_of_df_final[[2]]) # for weekly data
+```
+
 This code is for illustration purposes only. Individual results may vary.

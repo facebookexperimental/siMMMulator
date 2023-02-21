@@ -11,8 +11,8 @@
 #'
 #' @param my_variables A list that was created after running step 0. It stores the inputs you've specified.
 #' @param df_ads_step2 A data frame that was created after running step 2.
-#' @param true_cpm A vector of numbers specifying the true Cost per Impression (CPM) of each channel (noise will be added to this to simulate number of impressions), length MUST equal to the number of TOTAL channels, if channels do not use impressions to measure activity, then do not call this argument in the function, must be in same order as channels specified
-#' @param true_cpc A vector of numbers specifying the true Cost per Click (CPC) of each channel (noise will be added to this to simulate number of clicks), length MUST equal to the number of TOTAL channels, if channels do not use clicks to measure activity, then do not call this argument in the function, must be in same order as channels specified
+#' @param true_cpm A vector of numbers specifying the true Cost per Impression (CPM) of each channel (noise will be added to this to simulate number of impressions), length MUST equal to the number of TOTAL channels, if channels do not use impressions to measure activity, then put in NA for the channel, must be in same order as channels specified
+#' @param true_cpc A vector of numbers specifying the true Cost per Click (CPC) of each channel (noise will be added to this to simulate number of clicks), length MUST equal to the number of TOTAL channels, if channels do not use clicks to measure activity, then put in NA for the channel, must be in same order as channels specified
 #' @param mean_noisy_cpm_cpc A vector of numbers with mean of normal distribution that generates noise to CPM or CPC, vector with length equal to number of channels, must be in same order as channels specified (put channels that use impressions first, followed by channels that use clicks)
 #' @param std_noisy_cpm_cpc A vector of numbers with standard deviation of normal distribution that generates noise to CPM or CPC, vector with length equal to number of channels, must be in same order as channels specified (put channels that use impressions first, followed by channels that use clicks)
 #'
@@ -30,14 +30,16 @@
 #' \dontrun{
 #'
 #' step_3_generate_media(
+#' df_ads_step3 <- step_3_generate_media(
 #' my_variables = my_variables,
 #' df_ads_step2 = df_ads_step2,
-#' true_cpm = c(2, 20, 10, NA),
-#' true_cpc = c(NA, NA, NA, 1),
-#' mean_noisy_cpm_cpc = c(0, 0.05, 0.1, 0.02),
-#' std_noisy_cpm_cpc = c(0.1, 0.15, 0.2, 0.03)
+#' true_cpm = c(2, 20, NA),
+#' true_cpc = c(NA, NA, 0.25),
+#' mean_noisy_cpm_cpc = c(1, 0.05, 0.01),
+#' std_noisy_cpm_cpc = c(0.01, 0.15, 0.01)
 #' )
 #' }
+
 
 step_3_generate_media <- function(my_variables = my_variables,
                                   df_ads_step2 = df_ads_step2,
@@ -56,7 +58,7 @@ step_3_generate_media <- function(my_variables = my_variables,
 
   channels <- c(channels_impressions, channels_clicks)
   n_channels <- length(channels)
-  n_weeks <- years*52
+  n_days <- years*365
 
   # Display error messages for invalid inputs
   if (is.double(true_cpm) == FALSE & length(true_cpm) > 0 & any(is.na(true_cpc)) == FALSE) stop("You did not enter a number for true_cpm. Must enter a numeric or NA." ) # error if incorrect variable type for true_cpm
@@ -109,7 +111,7 @@ step_3_generate_media <- function(my_variables = my_variables,
       for (j in 1:length(channels_impressions)) {
         for (n in 1:frequency_of_campaigns) {
           df_ads_step3_intermediate <- df_ads_step3_intermediate %>% mutate(
-            !!paste0("impressions_", quo_name(channels_impressions[j]), "_after_running_week_", {n}) := case_when(
+            !!paste0("impressions_", quo_name(channels_impressions[j]), "_after_running_day_", {n}) := case_when(
               channel == channels_impressions[j] ~ lifetime_impressions/frequency_of_campaigns, # uniform distribution
             )
           )
@@ -126,7 +128,7 @@ step_3_generate_media <- function(my_variables = my_variables,
       for (j in 1:length(channels_clicks)) {
         for (n in 1:frequency_of_campaigns) {
           df_ads_step3_intermediate <- df_ads_step3_intermediate %>% mutate(
-            !!paste0("clicks_", quo_name(channels_clicks[j]), "_after_running_week_", {n}) := case_when(
+            !!paste0("clicks_", quo_name(channels_clicks[j]), "_after_running_day_", {n}) := case_when(
               channel == channels_clicks[j] ~ lifetime_clicks/frequency_of_campaigns, # uniform distribution
             )
           )
@@ -140,7 +142,7 @@ step_3_generate_media <- function(my_variables = my_variables,
     for (j in 1:length(channels)) {
       for (n in 1:frequency_of_campaigns) {
         df_ads_step3_intermediate <- df_ads_step3_intermediate %>% mutate(
-          !!paste0("spend_", quo_name(channels[j]), "_after_running_week_", {n}) := case_when(
+          !!paste0("spend_", quo_name(channels[j]), "_after_running_day_", {n}) := case_when(
             channel == channels[j] ~ spend_channel/frequency_of_campaigns, # uniform distribution
           )
         )

@@ -13,7 +13,7 @@
 #' @param df_ads_step5b A data frame that was created after running step 5b.
 #' @param alpha_saturation A vector of numbers specifying alpha parameter of geometric distribution for applying diminishing returns to media variables. Should be in the same order as how the media channels were specified (first with the channels that use impressions as a metric of activity and then channels that use clicks), must have same length as number of total channels
 #' @param gamma_saturation A vector of numbers between 0 and 1 specifying gamma parameter of geometric distribution for applying diminishing returns to media variables. MUST have elements between 0 and 1!!!! Should be in the same order as how the media channels were specified (first with the channels that use impressions as a metric of activity and then channels that use clicks), must have same length as number of total channels.
-#' @param x_marginal Numeric. When provided, the function returns the Hill-transformed value of the x_marginal input. Default is to leave NULL
+#' @param x_marginal Numeric. When provided, the function returns the Hill-transformed value of the x_marginal input. Default is to leave NULL. If you leave as NULL, you may get a warning message but this is not harmful.
 #'
 #' @importFrom stats quantile
 #'
@@ -25,8 +25,8 @@
 #' step_5c_diminishing_returns(
 #' my_variables = my_variables,
 #' df_ads_step5b = df_ads_step5b,
-#' alpha_saturation = c(4, 3, 2, 1),
-#' gamma_saturation = c(0.2, 0.3, 0.4, 0.5)
+#' alpha_saturation = c(4, 3, 2),
+#' gamma_saturation = c(0.2, 0.3, 0.4)
 #' )
 #'}
 
@@ -44,8 +44,9 @@ step_5c_diminishing_returns <- function(
   channels_clicks <- my_variables[[3]]
   frequency_of_campaigns <- my_variables[[4]]
   true_cvr <- my_variables[[5]]
+  start_date <- my_variables[[7]]
 
-  n_weeks <- years*52
+  n_days <- years*365
   channels <- c(channels_impressions, channels_clicks)
   n_channels = length(channels)
 
@@ -65,7 +66,7 @@ step_5c_diminishing_returns <- function(
     cols_to_adstock_imps <- cols_to_adstock_imps
   } else {
     for (i in 1:length(channels_impressions)){
-      cols_to_adstock_imps[i] <- paste0("sum_n_", channels_impressions[i], "_imps_this_week_adstocked")
+      cols_to_adstock_imps[i] <- paste0("sum_n_", channels_impressions[i], "_imps_this_day_adstocked")
     }
   }
 
@@ -74,7 +75,7 @@ step_5c_diminishing_returns <- function(
     cols_to_adstock_clicks <- cols_to_adstock_clicks # account for when no channels using clicks are provided
   } else {
     for (j in 1:length(channels_clicks)){
-      cols_to_adstock_clicks[j] <- paste0("sum_n_", quo_name(channels_clicks[j]), "_clicks_this_week_adstocked")
+      cols_to_adstock_clicks[j] <- paste0("sum_n_", quo_name(channels_clicks[j]), "_clicks_this_day_adstocked")
     }
   }
 

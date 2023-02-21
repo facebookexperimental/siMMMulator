@@ -38,8 +38,9 @@ step_5b_decay <- function(
   channels_clicks <- my_variables[[3]]
   frequency_of_campaigns <- my_variables[[4]]
   true_cvr <- my_variables[[5]]
+  start_date <- my_variables[[7]]
 
-  n_weeks <- years*52
+  n_days <- years*365
   channels <- c(channels_impressions, channels_clicks)
   n_channels = length(channels)
 
@@ -57,7 +58,7 @@ step_5b_decay <- function(
     cols_to_adstock_imps <- cols_to_adstock_imps
   } else {
     for (i in 1:length(channels_impressions)){
-      cols_to_adstock_imps[i] <- paste0("sum_n_", channels_impressions[i], "_imps_this_week")
+      cols_to_adstock_imps[i] <- paste0("sum_n_", channels_impressions[i], "_imps_this_day")
     }
   }
 
@@ -65,7 +66,7 @@ step_5b_decay <- function(
   if(length(channels_clicks) == 0) {cols_to_adstock_clicks <- cols_to_adstock_clicks # account for when no channels using clicks are provided
   } else {
     for (j in 1:length(channels_clicks)){
-      cols_to_adstock_clicks[j] <- paste0("sum_n_", quo_name(channels_clicks[j]), "_clicks_this_week")
+      cols_to_adstock_clicks[j] <- paste0("sum_n_", quo_name(channels_clicks[j]), "_clicks_this_day")
     }
   }
 

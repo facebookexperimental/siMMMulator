@@ -18,7 +18,7 @@ step_2_ads_spend(
 
 \item{campaign_spend_std}{A numeric, the standard deviation of money spent on a campaign, must be in same currency as baseline sales generated in step 1}
 
-\item{max_min_proportion_on_each_channel}{A vector of numerics specifying the minimum and maximum percentages of total spend allocated to each channel, should be in the same order as channels specified (channels that use impressions first followed by channels that use clicks), length should be 2 times (number of total channels - 1)}
+\item{max_min_proportion_on_each_channel}{A vector of numerics specifying the minimum and maximum percentages of total spend allocated to each channel, should be in the same order as channels specified (channels that use impressions first followed by channels that use clicks), length should be 2 times (number of total channels - 1), you should have a pair of numbers for each channel except the last channel}
 }
 \value{
 A data frame with amounts of money spent on each campaign and media channel
@@ -28,13 +28,9 @@ Simulates how much to spend on each ad campaign and channel
 }
 \examples{
 \dontrun{
-step_2_ads_spend(
-my_variables = my_variables,
+df_ads_step2 <- step_2_ads_spend(my_variables = my_variables,
 campaign_spend_mean = 329000,
 campaign_spend_std = 100000,
-max_min_proportion_on_each_channel <- c(0.45, 0.55,
-0.15, 0.25,
-0.1, 0.2)
-)
+max_min_proportion_on_each_channel <- c(0.45, 0.55, 0.1, 0.15))
 }
 }

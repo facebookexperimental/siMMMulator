@@ -34,6 +34,7 @@ step_8_calculate_roi <- function(
   frequency_of_campaigns <- my_variables[[4]]
   true_cvr <- my_variables[[5]]
   revenue_per_conversion <- my_variables[[6]]
+  start_date <- my_variables[[7]]
 
   n_weeks <- years*52
   channels <- c(channels_impressions, channels_clicks)

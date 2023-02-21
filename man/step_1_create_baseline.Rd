@@ -2,7 +2,7 @@
 % Please edit documentation in R/step_1_create_baseline.R
 \name{step_1_create_baseline}
 \alias{step_1_create_baseline}
-\title{Step 1 : Simulate Weekly Baseline Sales}
+\title{Step 1 : Simulate Daily Baseline Sales}
 \usage{
 step_1_create_baseline(
   my_variables = my_variables,
@@ -11,38 +11,38 @@ step_1_create_baseline(
   temp_var = 8,
   temp_coef_mean = 50000,
   temp_coef_sd = 5000,
-  error_std = 1e+05
+  error_std = 100
 )
 }
 \arguments{
 \item{my_variables}{A list that was created after running step 0. It stores the inputs you've specified.}
 
-\item{base_p}{A number, Amount of baseline sales we get in a week (sales not due to ads)}
+\item{base_p}{A number, Amount of baseline sales we get in a day (sales not due to ads)}
 
 \item{trend_p}{A number, How much baseline sales is going to grow over the whole period of our data.}
 
 \item{temp_var}{A number, How big the height of the sine function is for temperature -- i.e. how much temperature varies (used to inject seasonality into our data)}
 
-\item{temp_coef_mean}{A number, The average of how important seasonality is in our data (bigger this number, the more important seasonality is for sales)}
+\item{temp_coef_mean}{A number, The average of how important seasonality is in our data (the larger this number, the more important seasonality is for sales)}
 
-\item{temp_coef_sd}{A number, The standard deviation of how important seasonality is in our data (bigger this number, the more variable the importance of seasonality is for sales)}
+\item{temp_coef_sd}{A number, The standard deviation of how important seasonality is in our data (the larger this number, the more variable the importance of seasonality is for sales)}
 
-\item{error_std}{A number, Amount of statistical noise added to baseline sales (bigger this number, the noiser baseline sales will be)}
+\item{error_std}{A number, Amount of statistical noise added to baseline sales (the larger this number, the noisier baseline sales will be).}
 }
 \value{
-A data frame with weekly baseline sales
+A data frame with daily baseline sales
 }
 \description{
-Generates weekly baseline sales (sales not due to ad spend) for number of years specified. Takes user input and ads statistical noise.
+Generates daily baseline sales (sales not due to ad spend) for number of years specified. Takes user input and ads statistical noise.
 }
 \examples{
 \dontrun{
 step_1_create_baseline(my_variables = my_variables,
-                       base_p = 500000,
+                       base_p = 10000,
                        trend_p = 1.8,
                        temp_var = 8,
                        temp_coef_mean = 50000,
                        temp_coef_sd = 5000,
-                       error_std = 100000)
+                       error_std = 100)
                        }
 }

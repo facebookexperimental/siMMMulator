@@ -35,16 +35,16 @@ optional_step_1.5_plot_baseline_sales <- function(
 ){
 
   # initialize local variables to use later on
-  week <- NA
+  day <- NA
   baseline_sales <- NA
 
   # Make plot
-  p <- ggplot(data = df_baseline, aes (x = week, y = baseline_sales/1000)) +
+  p <- ggplot(data = df_baseline, aes (x = day, y = baseline_sales)) +
     geom_line() +
-    ylab("Baseline Sales in 1000s") +
+    ylab("Baseline Sales") +
     ggtitle("Baseline Sales by Week") +
     theme(plot.title = element_text(hjust = 0.5)) +
-    xlab("Week")
+    xlab("Day")
 
   # output
   p

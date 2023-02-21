@@ -21,7 +21,7 @@ step_5c_diminishing_returns(
 
 \item{gamma_saturation}{A vector of numbers between 0 and 1 specifying gamma parameter of geometric distribution for applying diminishing returns to media variables. MUST have elements between 0 and 1!!!! Should be in the same order as how the media channels were specified (first with the channels that use impressions as a metric of activity and then channels that use clicks), must have same length as number of total channels.}
 
-\item{x_marginal}{Numeric. When provided, the function returns the Hill-transformed value of the x_marginal input. Default is to leave NULL}
+\item{x_marginal}{Numeric. When provided, the function returns the Hill-transformed value of the x_marginal input. Default is to leave NULL. If you leave as NULL, you may get a warning message but this is not harmful.}
 }
 \value{
 A data frame with media variables that exhibit diminishing returns
@@ -34,8 +34,8 @@ Apply diminishing returns to our media variables
 step_5c_diminishing_returns(
 my_variables = my_variables,
 df_ads_step5b = df_ads_step5b,
-alpha_saturation = c(4, 3, 2, 1),
-gamma_saturation = c(0.2, 0.3, 0.4, 0.5)
+alpha_saturation = c(4, 3, 2),
+gamma_saturation = c(0.2, 0.3, 0.4)
 )
 }
 }

@@ -35,8 +35,9 @@ step_6_calculating_conversions <- function(
   channels_clicks <- my_variables[[3]]
   frequency_of_campaigns <- my_variables[[4]]
   true_cvr <- my_variables[[5]]
+  start_date <- my_variables[[7]]
 
-  n_weeks <- years*52
+  n_days <- years*365
   channels <- c(channels_impressions, channels_clicks)
   n_channels = length(channels)
 
@@ -48,7 +49,7 @@ step_6_calculating_conversions <- function(
     for(i in 1:length(channels_impressions)){
       for(j in 1:nrow(output)) {
         output[,paste0("conv_", quo_name(channels_impressions[i]))] <-
-          output[,paste0("sum_n_", quo_name(channels_impressions[i]), "_imps_this_week_adstocked_adstocked_decay_diminishing")]*output[paste0("cvr_", quo_name(channels_impressions[i]), "_this_week")]
+          output[,paste0("sum_n_", quo_name(channels_impressions[i]), "_imps_this_day_adstocked_adstocked_decay_diminishing")]*output[paste0("cvr_", quo_name(channels_impressions[i]), "_this_day")]
       }
     }
   }
@@ -59,7 +60,7 @@ step_6_calculating_conversions <- function(
     for(i in 1:length(channels_clicks)){
       for(j in 1:nrow(output)) {
         output[,paste0("conv_", quo_name(channels_clicks[i]))] <-
-          output[,paste0("sum_n_", quo_name(channels_clicks[i]), "_clicks_this_week_adstocked_adstocked_decay_diminishing")]*output[paste0("cvr_", quo_name(channels_clicks[i]), "_this_week")]
+          output[,paste0("sum_n_", quo_name(channels_clicks[i]), "_clicks_this_day_adstocked_adstocked_decay_diminishing")]*output[paste0("cvr_", quo_name(channels_clicks[i]), "_this_day")]
       }
     }
   }

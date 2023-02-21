@@ -2,7 +2,7 @@
 % Please edit documentation in R/step_5a_pivot_to_mmm_format.R
 \name{step_5a_pivot_to_mmm_format}
 \alias{step_5a_pivot_to_mmm_format}
-\title{Step 5a: Pivot from Our campaign + channel format to a weekly format}
+\title{Step 5a: Pivot from Our campaign + channel format to a daily format for MMM format}
 \arguments{
 \item{my_variables}{A list that was created after running step 0. It stores the inputs you've specified.}
 
@@ -12,12 +12,12 @@
 A data frame with media variables, media spend
 }
 \description{
-We pivot our table from Step 4 (which was on a campaign + channel format) to a weekly format.
+We pivot our table from Step 4 (which was on a campaign + channel format) to a daily format.(We will create a weekly format later.)
 }
 \examples{
 \dontrun{
 step_5a_pivot_to_mmm_format(
 my_variables = my_variables,
-df_ads_step4 = df_ads_step4)
+df_ads_step4 = df_ads_step4,
 }
 }
