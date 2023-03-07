@@ -28,7 +28,7 @@ This code is for illustration purposes only. Individual results may vary.
 
 | Parameter              | Description                                                                                                                                                                                                                                                                                                                                                | Default value if none provided |
 |------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
-| years                  | A number, number of years you want to generate weekly data for. Must be a whole number and equal to or greater than 1.                                                                                                                                                                                                                                     | 5                              |
+| years                  | A number, number of years you want to generate data for. Must be a whole number and equal to or greater than 1.                                                                                                                                                                                                                                     | 5                              |
 | channels_impressions   | A vector of character strings, names of media channels that use impressions as their metric of activity (Examples: Facebook, TV, Long-Form Video), must be in vector format with strings. Do not provide if not applicable to you.                                                                                                                         | No default provided.                          |
 | channels_clicks        | A vector of character strings, names of media channels that use clicks as their metric of activity (Examples: Search), must be in vector format with strings. Do not provide if not applicable to you.                                                                                                                                                     | No default provided.                          |
 | frequency_of_campaigns | A number, how often campaigns occur (for example, frequency of 2 would yield a new campaign every 2 weeks with each campaign lasting 2 weeks). Must be a whole number greater than or equal to 1.                                                                                                                                                          | 1                              |
@@ -44,9 +44,11 @@ start_date       | A string in the format yyyy/mm/dd that determines when your d
  > - Aim to use impressions when the channel does not have a more granular metric for activity.
 - *How do I know the true CVRs of each advertising channel?* You can use your historical knowledge of how your previous campaigns on these channels have done as a starting point. However, one advantage of `siMMMulator` is that you can play around with these numbers and see how different MMMs react based on this number.
 
-## Step 1 : Simulate Weekly Baseline Sales
+## Step 1 : Simulate Daily Baseline Sales
 
 Now we start by generating baseline sales (sales not due to ad spend). As you see, there are numerous examples below that you can generate, depending on the inputs you provide.
+
+Daily baseline sales will be simulated and aggregated at the end to get weekly sales.
 
 **Examples:**
 
@@ -245,11 +247,11 @@ This code is for illustration purposes only. Individual results may vary.
 
 ## Step 5 : Transforming Media Variables
 
-Steps 5a-5c are all about transforming the media variable by adding adstock, diminishing returns, and pivoting our simulated data to be in a weekly format.
+Steps 5a-5c are all about transforming the media variable by adding adstock, diminishing returns, and pivoting our simulated data to be in a daily format.
 
 ### Step 5a : Pivoting the table to an MMM format
 
-In Step 5a, we pivot our table from Step 4 (which was on a campaign + channel format) to a weekly format. This function requires no parameters.
+In Step 5a, we pivot our table from Step 4 (which was on a campaign + channel format) to a daily format. This function requires no parameters.
 
 **Example:**
 
