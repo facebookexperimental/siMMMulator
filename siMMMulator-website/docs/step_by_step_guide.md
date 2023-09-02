@@ -415,7 +415,7 @@ This code is for illustration purposes only. Individual results may vary.
 
 ## Step 9 : Get Final Data Frame
 
-Now we create the final data framse. We will keep only the necessary variables for final data frames and format. This function will output a list with two data frames. The first data frame is at the daily level; the second data frame is at a weekly level. They are built on the same assumptions. The weekly data frame is just the daily frame aggregated up. 
+Now we create the final data frame. We will keep only the necessary variables for final data frames and format. This function will output a list with two data frames. The first data frame is at the daily level; the second data frame is at a weekly level. They are built on the same assumptions. The weekly data frame is just the daily frame aggregated up. 
 
 **Example:**
 
